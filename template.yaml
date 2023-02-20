@@ -1,0 +1,46 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: RiskService Sample SAM Template for RiskService
+
+Globals:
+  Api:
+    TracingEnabled: true
+    BinaryMediaTypes: # see Binary responses section
+      - "*~1*" # converts to */* for any binary type
+  Function:
+    Timeout: 900
+    MemorySize: 10240
+    Runtime: python3.9
+    Environment:
+      Variables:
+        LOG_LEVEL: INFO
+        POWERTOOLS_LOGGER_SAMPLE_RATE: 0.1
+        POWERTOOLS_LOGGER_LOG_EVENT: true
+
+Resources:
+  RobustVolatilityFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Layers: # 
+        - !Sub arn:aws:lambda:eu-central-1:017000801446:layer:AWSLambdaPowertoolsPythonV2:17
+        - !Sub arn:aws:lambda:eu-central-1:336392948345:layer:AWSSDKPandas-Python39:2
+      Handler: robust_volatility_calculation.lambda_handler
+      CodeUri: src
+      Description: API handler function
+      Events:
+        AnyApiEvent:
+          Type: Api
+          Properties:
+            Path: /robust_volatility
+            Method: POST
+Outputs:
+  ApiUrl:
+    Description: "URL of the Calculator API"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
+
+  RobustVolatilityFunctionArn:
+    Description: "ARN of the RobustVolatilityFunction Lambda"
+    Value: !GetAtt RobustVolatilityFunction.Arn
+  RobustVolatilityFunctionIamRole:
+    Description: "IAM Role created for the RobustVolatilityFunction Lambda"
+    Value: !GetAtt RobustVolatilityFunctionRole.Arn

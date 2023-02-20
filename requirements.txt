@@ -1,0 +1,4 @@
+aws_lambda_powertools
+python-json-logger
+boto3
+pandas
