@@ -8,8 +8,8 @@ Globals:
     BinaryMediaTypes: # see Binary responses section
       - "*~1*" # converts to */* for any binary type
   Function:
-    Timeout: 900
-    MemorySize: 10240
+    Timeout: 3
+    MemorySize: 512
     Runtime: python3.9
     Environment:
       Variables:

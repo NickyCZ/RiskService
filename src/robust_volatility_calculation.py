@@ -13,7 +13,7 @@ app = APIGatewayRestResolver()
 dynamodb = boto3.resource("dynamodb")
 
 @app.post("/robust_volatility_calculation")
-def robust_volatility_calculation():   
+def robust_volatility_calculation():
     data = app.current_event.json_body
     instrument = data['instrument']
     start_time = int(data["start_time"])
